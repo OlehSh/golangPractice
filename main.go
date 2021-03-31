@@ -1,11 +1,11 @@
 package main
 
 import (
-	//"github.com/OlehSh/golangPractice"
 	"fmt"
+	"github.com/OlehSh/golangPractice/jsonplaceholder"
 )
 
 func main()  {
-	//str:= jsonplaceholder.GetPosts()
-	fmt.Println("Hi")
+	str, _ := jsonplaceholder.GetPosts()
+	fmt.Println(str)
 }
