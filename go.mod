@@ -1,3 +1,3 @@
-module example.com/olehsh/golangPractice
+module github.com/OlehSh/golangPractice
 
 go 1.16
