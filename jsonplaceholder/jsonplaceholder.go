@@ -1,27 +1,80 @@
 package jsonplaceholder
 
-import "fmt"
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"io"
+	"net/url"
+)
 import "net/http"
 import "io/ioutil"
 
+
+// TODO Write error handler ??
 func HandleError(e error)  {
 
 }
+type RequestMethod int
 
-func GetPosts() (string, error) {
-	url := "https://jsonplaceholder.typicode.com/posts/"
-	resp, err := http.Get(url)
+const (
+	GET = iota
+	POST
+	PUT
+	DELETE
+)
+
+func parseRespBody(respBody io.ReadCloser )  (string, error) {
+	fmt.Println("parseRespBody")
+	body, err := ioutil.ReadAll(respBody)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return "", err
+	}
+	fmt.Println("parseRespBody RETURN")
+	return string(body), nil
+}
+
+func CreateBody(params url.Values) *bytes.Buffer {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString(params.Encode())
+	return buffer
+}
+
+func Query(method RequestMethod , url string, params url.Values, contentType string) (string, error) {
+	fmt.Println("Making request")
+	var resp *http.Response
+	var err error
+
+	switch method {
+	case GET:
+		fmt.Println("Making GET request")
+		resp, err = http.Get(url)
+	case PUT:
+		client := &http.Client{}
+		body := CreateBody(params)
+		request, err := http.NewRequest("PUT", url, body)
+		if err != nil {
+			fmt.Println("ERROR:", err)
+			return "", err
+		}
+		resp, err = client.Do(request)
+	case POST:
+		body := CreateBody(params)
+		resp, err = http.Post(url, contentType, body)
+	default:
+		return "", errors.New("incorrect method")
+	}
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return "", err
+	}
 	if err != nil {
 		fmt.Println("ERROR:", err)
 		return "", err
 	}
 	defer resp.Body.Close()
-	body, error := ioutil.ReadAll(resp.Body)
-	if error != nil {
-		fmt.Println("ERROR:", error)
-		return "", error
-	}
-	str := string(body)
-	defer fmt.Println(str)
-	return str, nil
+
+
+	return parseRespBody(resp.Body)
 }

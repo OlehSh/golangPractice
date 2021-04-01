@@ -5,7 +5,9 @@ import (
 	"github.com/OlehSh/golangPractice/jsonplaceholder"
 )
 
+const baseUrl string = "https://jsonplaceholder.typicode.com"
+
 func main()  {
-	str, _ := jsonplaceholder.GetPosts()
+	str, _ := jsonplaceholder.Query( jsonplaceholder.GET, "https://jsonplaceholder.typicode.com/posts", nil,"")
 	fmt.Println(str)
 }
