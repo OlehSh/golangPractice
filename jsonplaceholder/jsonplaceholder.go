@@ -25,13 +25,11 @@ const (
 )
 
 func parseRespBody(respBody io.ReadCloser )  (string, error) {
-	fmt.Println("parseRespBody")
 	body, err := ioutil.ReadAll(respBody)
 	if err != nil {
 		fmt.Println("ERROR:", err)
 		return "", err
 	}
-	fmt.Println("parseRespBody RETURN")
 	return string(body), nil
 }
 
@@ -42,13 +40,11 @@ func CreateBody(params url.Values) *bytes.Buffer {
 }
 
 func Query(method RequestMethod , url string, params url.Values, contentType string) (string, error) {
-	fmt.Println("Making request")
 	var resp *http.Response
 	var err error
 
 	switch method {
 	case GET:
-		fmt.Println("Making GET request")
 		resp, err = http.Get(url)
 	case PUT:
 		client := &http.Client{}
@@ -69,12 +65,6 @@ func Query(method RequestMethod , url string, params url.Values, contentType str
 		fmt.Println("ERROR:", err)
 		return "", err
 	}
-	if err != nil {
-		fmt.Println("ERROR:", err)
-		return "", err
-	}
 	defer resp.Body.Close()
-
-
 	return parseRespBody(resp.Body)
 }
