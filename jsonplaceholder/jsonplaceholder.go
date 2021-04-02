@@ -3,18 +3,14 @@ package jsonplaceholder
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"net/url"
 )
-import "net/http"
-import "io/ioutil"
 
 
-// TODO Write error handler ??
-func HandleError(e error)  {
-
-}
 type RequestMethod int
 
 const (
@@ -27,7 +23,7 @@ const (
 func parseRespBody(respBody io.ReadCloser )  (string, error) {
 	body, err := ioutil.ReadAll(respBody)
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		log.Fatal("ERROR:", err)
 		return "", err
 	}
 	return string(body), nil
@@ -51,7 +47,7 @@ func Query(method RequestMethod , url string, params url.Values, contentType str
 		body := CreateBody(params)
 		request, err := http.NewRequest("PUT", url, body)
 		if err != nil {
-			fmt.Println("ERROR:", err)
+			log.Fatal("PUT ERROR:", err)
 			return "", err
 		}
 		resp, err = client.Do(request)
@@ -62,7 +58,7 @@ func Query(method RequestMethod , url string, params url.Values, contentType str
 		return "", errors.New("incorrect method")
 	}
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		log.Fatal("ERROR:", err)
 		return "", err
 	}
 	defer resp.Body.Close()

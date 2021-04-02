@@ -1,0 +1,15 @@
+version: "3.8"
+networks:
+  lan:
+services:
+  neo4j:
+    image: postgres:13.2-alpine
+    ports:
+      - "5432:5432"
+    container_name: postgres_13
+    environment:
+      - POSTGRES_USER=gopractice
+      - POSTGRES_DB=gopractice
+      - POSTGRES_PASSWORD=qwerty
+    volumes:
+      - ~/databases/goPractice/postgres:/var/lib/postgresql/data

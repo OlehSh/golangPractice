@@ -2,16 +2,12 @@ package filemanager
 
 import (
 	"log"
-	"os"
+	"io/ioutil"
 )
 
 func CreateFile(id string, data string )  {
-	file, err := os.Create("storage/" + id + ".txt")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = file.WriteString(data)
+	filename := "storage/" + id + ".txt"
+	err := ioutil.WriteFile(filename, []byte(data), 0664)
 
 	if err != nil {
 		log.Fatal(err)
